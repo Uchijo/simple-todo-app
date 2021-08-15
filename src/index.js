@@ -1,17 +1,45 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+
+
+function App(props){
+	const [taskArray, setTaskArray] = useState([]);
+	const [newTask, setNewTask] = useState("");
+
+	function handleSubmit(event){
+		event.preventDefault();
+		event.target[1].value = ""
+		let tmp = taskArray.slice();
+		tmp.push(newTask);
+		setTaskArray(tmp);
+	}
+
+	function handleDeleteButton(index){
+		const newTaskArray = [...taskArray];
+		newTaskArray.splice(index, 1);
+		setTaskArray(newTaskArray);
+	}
+
+	return (
+		<div>
+			<ul>
+				{taskArray.map((taskContent, index) => (
+					<li key={index}>
+						<button onClick={()=> handleDeleteButton(index)}>X</button>
+						{taskContent}
+					</li>
+				))}
+			</ul>
+			<form onSubmit={handleSubmit}>
+				<input type="submit" value="add task"/>
+				<input type="text" name="newTask" onChange={(event) => setNewTask(event.target.value)}/>
+			</form>
+		</div>
+	);
+}
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+	<App />,
+	document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
